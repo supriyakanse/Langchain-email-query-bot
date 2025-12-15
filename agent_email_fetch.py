@@ -1,19 +1,3 @@
-from typing import List
-
-from pydantic import BaseModel
-
-
-class EmailData(BaseModel):
-    sender: str
-    subject: str
-    date: str
-    body: str
-
-
-class EmailResponse(BaseModel):
-    emails: List[EmailData]
-
-
 import email
 import imaplib
 import re
@@ -87,7 +71,7 @@ def fetch_emails(email_id: str, app_password: str, start_date: str, end_date: st
 
             body = ""
             html_body = ""
-            
+
             if msg.is_multipart():
                 for part in msg.walk():
                     content_type = part.get_content_type()
@@ -100,7 +84,9 @@ def fetch_emails(email_id: str, app_password: str, start_date: str, end_date: st
                     elif content_type == "text/html" and not body:
                         # Fallback to HTML if no plain text found
                         try:
-                            html_body = part.get_payload(decode=True).decode(errors="ignore")
+                            html_body = part.get_payload(decode=True).decode(
+                                errors="ignore"
+                            )
                         except:
                             pass
             else:
@@ -115,27 +101,50 @@ def fetch_emails(email_id: str, app_password: str, start_date: str, end_date: st
                             body = decoded
                 except:
                     body = ""
-            
+
             # If we only got HTML, strip HTML tags and CSS
             if not body and html_body:
                 # Remove style and script tags with their contents
-                html_body = re.sub(r'<style[^>]*>.*?</style>', '', html_body, flags=re.DOTALL | re.IGNORECASE)
-                html_body = re.sub(r'<script[^>]*>.*?</script>', '', html_body, flags=re.DOTALL | re.IGNORECASE)
+                html_body = re.sub(
+                    r"<style[^>]*>.*?</style>",
+                    "",
+                    html_body,
+                    flags=re.DOTALL | re.IGNORECASE,
+                )
+                html_body = re.sub(
+                    r"<script[^>]*>.*?</script>",
+                    "",
+                    html_body,
+                    flags=re.DOTALL | re.IGNORECASE,
+                )
                 # Remove all remaining HTML tags
-                body = re.sub(r'<[^>]+>', '', html_body)
+                body = re.sub(r"<[^>]+>", "", html_body)
                 # Decode HTML entities
-                body = body.replace('&nbsp;', ' ').replace('&amp;', '&').replace('&lt;', '<').replace('&gt;', '>')
-                body = body.replace('&quot;', '"').replace('&#39;', "'").replace('&apos;', "'")
-                body = body.replace('&mdash;', '—').replace('&ndash;', '–').replace('&hellip;', '...')
+                body = (
+                    body.replace("&nbsp;", " ")
+                    .replace("&amp;", "&")
+                    .replace("&lt;", "<")
+                    .replace("&gt;", ">")
+                )
+                body = (
+                    body.replace("&quot;", '"')
+                    .replace("&#39;", "'")
+                    .replace("&apos;", "'")
+                )
+                body = (
+                    body.replace("&mdash;", "—")
+                    .replace("&ndash;", "–")
+                    .replace("&hellip;", "...")
+                )
                 # Remove HTML/CSS comments
-                html_body = re.sub(r'<!--.*?-->', '', html_body, flags=re.DOTALL)
-                html_body = re.sub(r'/\*.*?\*/', '', html_body, flags=re.DOTALL)
+                html_body = re.sub(r"<!--.*?-->", "", html_body, flags=re.DOTALL)
+                html_body = re.sub(r"/\*.*?\*/", "", html_body, flags=re.DOTALL)
                 # Remove CSS-like patterns (property: value;)
-                body = re.sub(r'\b[a-zA-Z-]+\s*:\s*[^;{}\n]+;', '', body)
+                body = re.sub(r"\b[a-zA-Z-]+\s*:\s*[^;{}\n]+;", "", body)
                 # Remove CSS braces
-                body = re.sub(r'\{[^{}]*\}', '', body)
+                body = re.sub(r"\{[^{}]*\}", "", body)
                 # Clean up whitespace
-                body = ' '.join(body.split())
+                body = " ".join(body.split())
 
             email_list.append(
                 {
