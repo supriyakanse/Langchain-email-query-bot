@@ -110,22 +110,3 @@ def run_email_workflow(start_date=None, end_date=None):
     except Exception as e:
         print(f"\n❌ Workflow Error: {e}")
         raise
-
-
-if __name__ == "__main__":
-    try:
-        # Run the workflow
-        vectorstore = run_email_workflow()
-
-        if vectorstore:
-            print("\n" + "=" * 50)
-            print("Workflow completed successfully!")
-            print("Vector store is ready for querying.")
-            print("=" * 50)
-        else:
-            print("\n" + "=" * 50)
-            print("Workflow completed - No emails to process")
-            print("=" * 50)
-    except Exception as e:
-        print(f"\n❌ Failed to complete workflow: {e}")
-        exit(1)

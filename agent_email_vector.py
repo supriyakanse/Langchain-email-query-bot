@@ -2,15 +2,12 @@ import re
 import uuid
 
 from email_reply_parser import EmailReplyParser
-from langchain.tools import tool
 from langchain_community.vectorstores import Chroma
 from langchain_ollama import OllamaEmbeddings
 from langchain_google_genai import GoogleGenerativeAIEmbeddings
 
 # Import configuration
 from config import config
-
-# from talon.signature import extract as extract_signature
 
 
 def get_embeddings():
@@ -75,10 +72,7 @@ def clean_email(email):
     # 7. Remove reply chain
     body = EmailReplyParser.parse_reply(body)
 
-    # 8. Remove signature
-    # body, sig = extract_signature(body)
-
-    # 9. Normalize whitespace - collapse multiple spaces/newlines
+    # 8. Normalize whitespace - collapse multiple spaces/newlines
     body = re.sub(r'\s+', ' ', body)
     body = body.strip()
 
