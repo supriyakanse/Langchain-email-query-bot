@@ -169,3 +169,30 @@ def fetch_emails(email_id: str, app_password: str, start_date: str, end_date: st
                 imap.logout()
             except:
                 pass
+
+
+from langchain.agents import create_agent
+from langchain.agents.structured_output import ToolStrategy
+from langchain_core.messages import HumanMessage
+from langchain_google_genai import ChatGoogleGenerativeAI
+
+if __name__ == "__main__":
+    llm = ChatGoogleGenerativeAI(model="gemini-2.5-flash", temperature=0.2)
+
+    email_agent = create_agent(
+        llm, tools=[fetch_emails], response_format=ToolStrategy(EmailResponse)
+    )
+
+    response = email_agent.invoke(
+        {
+            "messages": [
+                HumanMessage(
+                    content="Fetch my emails. Email: email, "
+                    "App Password: password, "
+                    "Start: 2025-11-20, End: 2025-11-22"
+                )
+            ]
+        }
+    )
+
+    print(response["structured_response"])
