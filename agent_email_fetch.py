@@ -178,8 +178,8 @@ if __name__ == "__main__":
         {
             "messages": [
                 HumanMessage(
-                    content="Fetch my emails. Email: kansesup@gmail.com, "
-                    "App Password: rkpu ugcr tcgw qsjx, "
+                    content="Fetch my emails. Email: email, "
+                    "App Password: password, "
                     "Start: 2025-11-20, End: 2025-11-22"
                 )
             ]
