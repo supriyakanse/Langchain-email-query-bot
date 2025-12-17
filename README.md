@@ -105,6 +105,8 @@ Outputs & persistence:
 
 ---
 
+
+
 ## Architecture & Implementation Notes 🔎
 
 - agent_email_fetch.py: IMAP-based Gmail fetcher (tool: `fetch_emails`). Handles multipart emails, HTML fallback, and basic sanitization.
@@ -130,6 +132,83 @@ The code automatically chooses embedding and LLM implementations based on `LLM_P
 - For Ollama, ensure the Ollama server is running and accessible at `OLLAMA_BASE_URL`.
 - For Gmail, create an App Password (recommended) and set it in `APP_PASSWORD`.
 - If you see errors when loading the vector store, ensure the `CHROMA_PERSIST_DIRECTORY` exists and is readable.
+
+---
+
+## POW — Proof of Workflow ✅
+
+Below is an example run of the `workflow` command (Fetch → Index → Query) demonstrating the assistant in action.
+
+```text
+============================================================
+           EMAIL ASSISTANT - AI-Powered Email Query
+============================================================
+
+Running complete workflow: Fetch → Index → Query
+
+Phase 1: Fetching and indexing emails
+------------------------------------------------------------
+==================================================
+EMAIL ASSISTANT - WORKFLOW
+==================================================
+Email: kansesup@gmail.com
+Date Range: 2025-12-15 to 2025-12-17
+==================================================
+
+Step 1: Fetching emails...
+✓ Fetched 11 emails
+
+Step 1.5: Saving emails to JSON file...
+✓ Saved 11 emails to data/emails_2025-12-15_2025-12-17.json
+
+Step 2: Building ChromaDB vector store...
+✓ Vector store created successfully
+✓ Total documents in vector store: 11
+
+============================================================
+Phase 2: Interactive Query Mode
+============================================================
+
+✓ Ready to query 11 emails
+
+Example queries you can try:
+  1. How many emails did I receive?
+  2. Summarize my emails
+  3. Did I receive any important emails?
+  4. List all senders
+
+Ask a question about your emails (or 'quit' to exit): how many emails did i receive
+
+Searching and generating response...
+
+Answer: You received 11 emails.
+------------------------------------------------------------
+
+Ask a question about your emails (or 'quit' to exit): summarize my emails
+
+Searching and generating response...
+
+Answer: Here's a summary of your emails:
+
+Email 1: Job listings and career advice  
+Email 2: ZipRecruiter job alerts  
+Email 3: Canva promotional email  
+Email 4: Agentic AI learning opportunity  
+Email 5: EduHub license renewal reminder  
+Email 6: School PTM reminder  
+Email 7: LLM environment configuration  
+Email 8: Zomato promotional email
+------------------------------------------------------------
+
+Ask a question about your emails (or 'quit' to exit): did i receive any important email
+
+Answer: Yes, you received an important email regarding a license renewal expiring on January 1, 2026.
+------------------------------------------------------------
+
+Ask a question about your emails (or 'quit' to exit): exit
+
+Goodbye!
+```
 
 ---
 
